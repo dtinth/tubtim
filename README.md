@@ -1,3 +1,6 @@
+This is my helper code for Thailand Code Jom.
+
+Here is the relevant `.bash_profile`.
 
 ```bash
 alias codejom_ruby='ruby -I ~/Codejom/_lib/ -r primes -r codejom'
