@@ -19,6 +19,13 @@ module Kernel
   def cj(&block)
     gets.to_i.times(&block)
   end
+  alias_method :cases, :cj
+  def memoize(method_name)
+    bang = (method_name.to_s + '!').to_sym
+    memo = {}
+    self.class.send :alias_method, bang, method_name
+    self.class.send :define_method, method_name, Proc.new { |*args| memo[args] ||= self.send(bang, *args) }
+  end
 end
 
 class Array
