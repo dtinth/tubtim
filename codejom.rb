@@ -28,9 +28,12 @@ module Kernel
   end
 end
 
-class Array
+module Enumerable
   def sum
     reduce(&:+)
+  end
+  def stat
+    each_with_object(Hash.new(0)) { |c, o| o[c] += 1 }
   end
 end
 
