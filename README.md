@@ -1,4 +1,10 @@
-This is my helper code for Thailand Code Jom.
+
+This repository contains a collection of utility methods for Ruby.
+Such as array summing and statistics, prime numbers, and shorthand methods.
+
+This library is created for use in Thailand Code Jom 2013,
+a programming competition focused on speed, so that with this I can write code
+to solve problem faster than using just standard APIs provided by Ruby.
 
 Here is the relevant `.bash_profile`.
 
