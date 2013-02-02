@@ -5,10 +5,10 @@ class Fixnum
   def prime?
     $prime[self] != '0'
   end
-  def next_prime
+  def get_next_prime
     (self + 1).upto($prime.length - 1).find(&:prime?)
   end
-  def prev_prime
+  def get_prev_prime
     (self - 1).downto(2).find(&:prime?)
   end
 end

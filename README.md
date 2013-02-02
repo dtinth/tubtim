@@ -9,8 +9,8 @@ to solve problem faster than using just standard APIs provided by Ruby.
 Here is the relevant `.bash_profile`.
 
 ```bash
-alias codejom_ruby='ruby -I ~/Codejom/_lib/ -r primes -r codejom'
-alias ir='irb -I ~/Codejom/_lib/ -r primes -r codejom'
+alias codejom_ruby='ruby -I ~/Codejom/_lib/ -r tubtim'
+alias ir='irb -I ~/Codejom/_lib/ -r tubtim'
 r() {
   codejom_ruby "$@" | tee ~/Codejom/out
 }

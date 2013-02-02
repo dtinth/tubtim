@@ -1,13 +1,38 @@
 
+require 'primes'
+
 class Integer
   def array(&block)
     Array.new(self, &block)
   end
 end
 
+class Applier
+  include Enumerable
+  def initialize(start, &block)
+    @block = block
+    @value = start
+  end
+  def each
+    loop do
+      @value = @block.call(@value)
+      yield @value
+    end
+  end
+end
+
 class Object
   def self
     self
+  end
+  def apply(times=nil)
+    c = self
+    if times.nil?
+      Applier.new(c) { |x| yield x }
+    else
+      times.times do c = yield c end
+      c
+    end
   end
 end
 
@@ -40,6 +65,15 @@ module Enumerable
   end
   def stat
     each_with_object(Hash.new(0)) { |c, o| o[c] += 1 }
+  end
+end
+
+class Fixnum
+  def next_prime(n=1)
+    apply(n, &:get_next_prime)
+  end
+  def prev_prime(n=1)
+    apply(n, &:get_prev_prime)
   end
 end
 
