@@ -5,6 +5,12 @@ class Integer
   end
 end
 
+class Object
+  def self
+    self
+  end
+end
+
 module Kernel
   private
   def strs
