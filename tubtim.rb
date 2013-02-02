@@ -68,6 +68,15 @@ module Enumerable
   end
 end
 
+class NilClass
+  def get_next_prime
+    nil
+  end
+  def get_prev_prime
+    nil
+  end
+end
+
 class Fixnum
   def next_prime(n=1)
     apply(n, &:get_next_prime)
@@ -75,5 +84,36 @@ class Fixnum
   def prev_prime(n=1)
     apply(n, &:get_prev_prime)
   end
+  def th_prime
+    1.next_prime(self)
+  end
+  alias_method :st_prime, :th_prime
+  alias_method :nd_prime, :th_prime
+  alias_method :rd_prime, :th_prime
 end
 
+class Array
+  def bsearch(value)
+    index = lbound(value)
+    self[index] == value ? index : nil
+  end
+  def lbound(value)
+    min = 0
+    max = length
+    left = min
+    right = max
+    while left <= right
+      mid = ((left + right) / 2).to_i
+      if self[mid] <= value
+        if mid + 1 >= max || value < self[mid + 1]
+          return mid
+        else
+          left = mid + 1
+        end
+      else
+        right = mid - 1
+      end
+    end
+    return 0
+  end
+end
