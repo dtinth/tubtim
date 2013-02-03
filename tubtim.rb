@@ -5,6 +5,16 @@ class Integer
   def array(&block)
     Array.new(self, &block)
   end
+  def factorize
+    x = self
+    o = []
+    loop do
+      break unless (c = (2..x).find { |i| x % i == 0 })
+      x /= c
+      o << c
+    end
+    o
+  end
 end
 
 class Applier
