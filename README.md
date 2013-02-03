@@ -22,5 +22,5 @@ i() {
 And this little extra bit goes into my `.vimrc`.
 
 ```vimrc
-ttyrec -e 'tmux attach' ~/codejom-qualify.tty
+inoremap ;cs cases do<cr>end<esc>O
 ```
