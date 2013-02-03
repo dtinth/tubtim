@@ -14,4 +14,7 @@ alias ir='irb -I ~/Codejom/_lib/ -r tubtim'
 r() {
   codejom_ruby "$@" | tee ~/Codejom/out
 }
+i() {
+  cat > input
+}
 ```
