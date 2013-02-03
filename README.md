@@ -18,3 +18,9 @@ i() {
   cat > input
 }
 ```
+
+And this little extra bit goes into my `.vimrc`.
+
+```vimrc
+ttyrec -e 'tmux attach' ~/codejom-qualify.tty
+```
