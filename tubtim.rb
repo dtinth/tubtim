@@ -1,4 +1,6 @@
 
+require 'backports/2.0'
+require 'mathn'
 require 'primes'
 
 class Integer
