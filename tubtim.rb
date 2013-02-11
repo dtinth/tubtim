@@ -69,6 +69,36 @@ module Kernel
     self.class.send :alias_method, bang, method_name
     self.class.send :define_method, method_name, Proc.new { |*args| memo[args] ||= self.send(bang, *args) }
   end
+  def memoized(code)
+    Memoizer.new(code)
+  end
+  def zero_one_knapsack(values, weights, max_weight)
+    memoized(->(index, weight_left) {
+      return 0 if weight_left <= 0
+      return 0 if index == 0
+      i = index - 1
+      can = [recur(index - 1, weight_left)]
+      if weights[i] <= weight_left
+        can << values[i] + recur(index - 1, weight_left - weights[i])
+      end
+      can.max
+    }).call(values.length, max_weight)
+  end
+end
+
+class Memoizer
+  def initialize(code)
+    raise "I want lambda" unless code.lambda?
+    @code = code
+    @memo = {}
+  end
+  def call(*args)
+    @memo[args] ||= call!(*args)
+  end
+  def call!(*args)
+    self.instance_exec(*args, &@code)
+  end
+  alias_method :recur, :call
 end
 
 module Enumerable
@@ -77,6 +107,9 @@ module Enumerable
   end
   def stat
     each_with_object(Hash.new(0)) { |c, o| o[c] += 1 }
+  end
+  def compact
+    reject(&:nil?)
   end
 end
 
@@ -129,3 +162,16 @@ class Array
     return 0
   end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
