@@ -19,20 +19,6 @@ class Integer
   end
 end
 
-class Applier
-  include Enumerable
-  def initialize(start, &block)
-    @block = block
-    @value = start
-  end
-  def each
-    loop do
-      @value = @block.call(@value)
-      yield @value
-    end
-  end
-end
-
 class Object
   def self
     self
@@ -40,7 +26,11 @@ class Object
   def apply(times=nil)
     c = self
     if times.nil?
-      Applier.new(c) { |x| yield x }
+      Enumerator.new do |y|
+        loop do
+          y << (c = yield c)
+        end
+      end
     else
       times.times do c = yield c end
       c
