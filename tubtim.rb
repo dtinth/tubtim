@@ -1,7 +1,18 @@
 
-require 'backports/2.0'
 require 'mathn'
-require 'primes'
+
+class Fixnum
+  def get_next_prime
+    c = self
+    loop do
+      c += 1
+      return c if c.prime?
+    end
+  end
+  def get_prev_prime
+    (self - 1).downto(2).find(&:prime?)
+  end
+end
 
 class Integer
   def array(&block)
@@ -16,6 +27,9 @@ class Integer
       o << c
     end
     o
+  end
+  def bound(length)
+    0 <= self && self < length
   end
 end
 
@@ -39,56 +53,42 @@ class Object
 end
 
 module Kernel
+
   private
+
   def strs
     gets.split
   end
+
   def ints
     strs.map(&:to_i)
   end
+
+  def eat(how_many=nil)
+    (how_many || gets.to_i).array { gets.strip }
+  end
+
   def yesno(s)
     puts s ? 'yes' : 'no'
   end
-  def cj(&block)
+
+  def cases(&block)
     gets.to_i.times(&block)
   end
-  alias_method :cases, :cj
-  def memoize(method_name)
-    bang = (method_name.to_s + '!').to_sym
-    memo = {}
-    self.class.send :alias_method, bang, method_name
-    self.class.send :define_method, method_name, Proc.new { |*args| memo[args] ||= self.send(bang, *args) }
-  end
-  def memoized(code)
-    Memoizer.new(code)
-  end
-  def zero_one_knapsack(values, weights, max_weight)
-    memoized(->(index, weight_left) {
-      return 0 if weight_left <= 0
-      return 0 if index == 0
-      i = index - 1
-      can = [recur(index - 1, weight_left)]
-      if weights[i] <= weight_left
-        can << values[i] + recur(index - 1, weight_left - weights[i])
-      end
-      can.max
-    }).call(values.length, max_weight)
-  end
-end
 
-class Memoizer
-  def initialize(code)
-    raise "I want lambda" unless code.lambda?
-    @code = code
-    @memo = {}
+  def memoize(a=nil, &b)
+    block = a || b
+    memo = { }
+    call = -> *args { memo[args] ||= block[call, *args] }
   end
-  def call(*args)
-    @memo[args] ||= call!(*args)
+
+  def trampoline(a=nil, &b)
+    block = a || b
+    jump = -> x { x = x[] while Proc === x; x }
+    make = -> *args { -> { block[make, *args] } }
+    -> *args { jump[make[*args]] }
   end
-  def call!(*args)
-    self.instance_exec(*args, &@code)
-  end
-  alias_method :recur, :call
+
 end
 
 module Enumerable
@@ -128,28 +128,8 @@ class Fixnum
 end
 
 class Array
-  def bsearch(value)
-    index = lbound(value)
-    self[index] == value ? index : nil
-  end
-  def lbound(value)
-    min = 0
-    max = length
-    left = min
-    right = max
-    while left <= right
-      mid = ((left + right) / 2).to_i
-      if self[mid] <= value
-        if mid + 1 >= max || value < self[mid + 1]
-          return mid
-        else
-          left = mid + 1
-        end
-      else
-        right = mid - 1
-      end
-    end
-    return 0
+  def lower_bound(&block)
+    (0...length).bsearch { |c| yield self[c] } || length
   end
 end
 
